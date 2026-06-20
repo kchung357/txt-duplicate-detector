@@ -12,6 +12,7 @@ This project is useful for comparing large collections of text files such as nov
 - Uses n-gram shingling for fuzzy text matching
 - Calculates Jaccard similarity
 - Calculates containment similarity
+- Shows risk levels such as `LOW`, `MEDIUM`, `HIGH`, `VERY HIGH`, and `EXTREME`
 - Displays progress, elapsed time, and estimated remaining time
 - No external Python dependencies required
 
@@ -37,19 +38,19 @@ No package installation is required.
 Run the detector on a directory containing `.txt` files:
 
 ```bash
-python detect_duplicated_txt.py /path/to/txt/files
+python detect_duplicate_txt.py /path/to/txt/files
 ```
 
 Example:
 
 ```bash
-python detect_duplicated_txt.py ./books
+python detect_duplicate_txt.py ./books
 ```
 
 Use a specific detection mode:
 
 ```bash
-python detect_duplicated_txt.py ./books --mode chinese-novel-balanced
+python detect_duplicate_txt.py ./books --mode chinese-novel-balanced
 ```
 
 ## Detection Modes
@@ -96,43 +97,63 @@ Suspiciously similar file pairs: 2
 
 ## How It Works
 
-The script:
+The script compares `.txt` files using fuzzy text similarity.
 
-1. Reads all `.txt` files in the selected directory.
-2. Decodes files using common encodings:
+The process is:
+
+1. Read all `.txt` files in the selected directory.
+2. Decode files using common encodings:
    - UTF-8
    - UTF-8 with BOM
    - Big5
    - GB18030
-3. Normalizes the text.
-4. Keeps only:
+3. Normalize the text.
+4. Keep only:
    - Chinese characters
    - English letters
    - Numbers
-5. Splits the normalized text into n-gram shingles.
-6. Hashes each shingle with MD5.
-7. Compares file pairs using:
+5. Split the normalized text into n-gram shingles.
+6. Hash each shingle with MD5.
+7. Compare file pairs using:
    - Jaccard similarity
    - Containment similarity
-8. Reports pairs that exceed the selected thresholds.
+8. Report pairs that exceed the selected thresholds.
 
 ## Similarity Metrics
 
 ### Jaccard Similarity
 
-Jaccard similarity measures the overall overlap between two files:
+Jaccard similarity measures the overall overlap between two files.
 
 ```text
 intersection / union
 ```
 
+Higher values mean the two files share more text patterns overall.
+
 ### Containment Similarity
 
-Containment similarity measures how much of the smaller file appears inside the larger file:
+Containment similarity measures how much of the smaller file appears inside the larger file.
 
 ```text
 intersection / smaller_set_size
 ```
+
+This is useful for detecting cases where one file may be partially copied into another larger file.
+
+## Risk Levels
+
+The script assigns a risk label based on Jaccard similarity and containment similarity.
+
+| Risk | Meaning |
+|---|---|
+| `LOW` | Small amount of similarity |
+| `MEDIUM` | Noticeable similarity |
+| `HIGH` | Strong similarity |
+| `VERY HIGH` | Very strong similarity |
+| `EXTREME` | One file may be mostly contained in another |
+
+These labels are only indicators. Results should be reviewed manually.
 
 ## Performance Notes
 
@@ -175,6 +196,17 @@ txt/
 output/
 ```
 
+Add them to your `.gitignore` if you use those folders locally.
+
 ## License
 
 This project is licensed under the MIT License.
+```
+
+After replacing your README, commit it:
+
+```bash
+git add README.md
+git commit -m "Update README with correct script filename"
+git push
+```
