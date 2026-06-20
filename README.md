@@ -201,12 +201,3 @@ Add them to your `.gitignore` if you use those folders locally.
 ## License
 
 This project is licensed under the MIT License.
-```
-
-After replacing your README, commit it:
-
-```bash
-git add README.md
-git commit -m "Update README with correct script filename"
-git push
-```
